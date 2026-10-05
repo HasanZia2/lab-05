@@ -54,6 +54,7 @@ fun CityListScreen(
                 modifier = Modifier.padding(16.dp),
                 onClick = {
                     showAddCityFields = !showAddCityFields
+                    showDeleteCityFields = false
                     if (showAddCityFields) {
                         selectedCity = null
                         editedCityName = ""
@@ -68,7 +69,8 @@ fun CityListScreen(
                 modifier = Modifier.padding(16.dp),
                 onClick = {
                     showDeleteCityFields = !showDeleteCityFields
-                    if (showDeleteCityFields) {
+                    showAddCityFields = false
+                        if (showDeleteCityFields) {
                         selectedCity = null
                         editedCityName = ""
                         editedProvinceName = ""
@@ -223,6 +225,7 @@ fun CityListScreen(
                     city = city,
                     onClick = {
                         showAddCityFields = false
+                        showDeleteCityFields = false
                         newCityName = ""
                         newProvinceName = ""
                         selectedCity = city

@@ -26,6 +26,18 @@ class CityRepository {
     }
 
     fun updateCity(oldCity: City, updatedCity: City) {
+        //Causes bugs with both addCity and deleteCity; database appears to store
+        //old City attributes even after updateCity is called. In practice, this
+        //causes bugs such as the following:
+        //1. If you add Edmonton, AB, for instance, then update Edmonton, AB to
+        //   Vancouver, BC, then add Edmonton, AB back, Vancouver, BC gets replaced
+        //   with Edmonton, AB instead of storing both.
+        //2. If you add Edmonton, AB, then update Edmonton, AB to Calgary, AB, trying
+        //   to delete Calgary, AB will not remove anything. Instead, if you try to
+        //   delete Edmonton, AB, Calgary, AB will be removed.
+        //Leaving this here because I was not sure if I should change updateCity to
+        //address these problems, since this was the implementation given in the lab
+        //instructions.
         citiesRef.document(oldCity.name).set(updatedCity)
     }
 
