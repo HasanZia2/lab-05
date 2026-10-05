@@ -31,12 +31,16 @@ import com.example.listycity.ui.theme.ListyCityTheme
 fun CityListScreen(
     cities: List<City>,
     onAddCity: (City) -> Unit,
+    onDeleteCity: (City) -> Unit,
     onUpdateCity: (City, City) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var newCityName by remember { mutableStateOf("") }
     var newProvinceName by remember { mutableStateOf("") }
+    var deleteCityName by remember { mutableStateOf("") }
+    var deleteProvinceName by remember { mutableStateOf("") }
     var showAddCityFields by remember { mutableStateOf(false) }
+    var showDeleteCityFields by remember { mutableStateOf(false) }
     var selectedCity by remember { mutableStateOf<City?>(null) }
     var editedCityName by remember { mutableStateOf("") }
     var editedProvinceName by remember { mutableStateOf("") }
@@ -58,6 +62,20 @@ fun CityListScreen(
                 }
             ) {
                 Text("+")
+            }
+
+            FloatingActionButton(
+                modifier = Modifier.padding(16.dp),
+                onClick = {
+                    showDeleteCityFields = !showDeleteCityFields
+                    if (showDeleteCityFields) {
+                        selectedCity = null
+                        editedCityName = ""
+                        editedProvinceName = ""
+                    }
+                }
+            ) {
+                Text("-")
             }
         }
         if (showAddCityFields) {
@@ -101,6 +119,50 @@ fun CityListScreen(
                     }
                 ) {
                     Text("ADD CITY")
+                }
+            }
+        }
+        if (showDeleteCityFields) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                OutlinedTextField(
+                    value = deleteCityName,
+                    onValueChange = { deleteCityName = it },
+                    label = { Text("City") },
+                    modifier = Modifier.weight(1f)
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                OutlinedTextField(
+                    value = deleteProvinceName,
+                    onValueChange = { deleteProvinceName = it },
+                    label = { Text("Province") },
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Button(
+                    modifier = Modifier.padding(vertical = 12.dp),
+                    onClick = {
+                        if (deleteCityName.isNotBlank() && deleteProvinceName.isNotBlank()) {
+                            onDeleteCity(
+                                City(
+                                    name = deleteCityName,
+                                    province = deleteProvinceName
+                                )
+                            )
+
+                            deleteCityName = ""
+                            deleteProvinceName = ""
+                            showDeleteCityFields = false
+                        }
+                    }
+                ) {
+                    Text("DELETE CITY")
                 }
             }
         }
@@ -213,6 +275,7 @@ fun CityListScreenPreview() {
                 City("Calgary", "AB")
             ),
             onAddCity = {},
+            onDeleteCity = {},
             onUpdateCity = { _, _ -> }
         )
     }
